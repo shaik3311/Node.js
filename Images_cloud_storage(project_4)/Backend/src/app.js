@@ -54,6 +54,7 @@ app.get('/posts',async(req,res)=>{
         message:"Posts Fetched successfully",
         posts : posts
     });
+    
 })
 
 module.exports = app;
