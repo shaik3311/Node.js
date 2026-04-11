@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Nav from '../components/Nav'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const createPost = () => {
   const [title, setTitle] = useState("");
@@ -17,16 +18,8 @@ const createPost = () => {
     formData.append("image",file);
 
     try{
-      const res = await fetch("http://localhost:3000/post",{
-        method : "POST",
-        body : formData
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert("Upload success 🚀");
-      } else {
-        alert(data.message || "Upload failed");
-      }
+      const res = await axios.post("http://localhost:3000/post", formData);
+      alert(res);
     }catch(error){
       alert("Upload failed");
     }
@@ -44,12 +37,15 @@ const createPost = () => {
           onChange={(e)=>{
             setTitle(e.target.value);
           }}
+          name='title'
           className='mb-3 px-6 py-3 border-2 border-black rounded-lg' type="text" placeholder='Enter Title for image' required />
           <h2 className='mb-2'>Upload a image : </h2>
           <input
           onChange={(e)=>{
             setFile(e.target.files[0]);
           }}
+          name='image'
+          accept='image/*'
           className='mb-3 px-6 py-3 border-2 border-black rounded-lg' type="file" required/> <br />
           <button className='bg-cyan-700 py-3 rounded-lg hover:bg-cyan-800 active:scale-96' type='submit'>Upload</button>
         </form>

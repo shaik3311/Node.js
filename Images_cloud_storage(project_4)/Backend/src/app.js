@@ -2,9 +2,10 @@ const express = require('express');
 const multer = require('multer');
 const imageKit = require('./services/cloudStorage');
 const postModel = require('./models/posts.model')
+const cors = require('cors');
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 const upload = multer({storage : multer.memoryStorage()});
@@ -53,8 +54,23 @@ app.get('/posts',async(req,res)=>{
     res.status(200).json({
         message:"Posts Fetched successfully",
         posts : posts
-    });
-    
+    });  
 })
+
+app.delete('/posts/:id', async (req, res) => {
+  const id = req.params.id;
+    
+  try {
+    const deletedPost = await postModel.findByIdAndDelete(id);
+    return res.status(204).json({
+        message:"Deletion completed",
+        post : deletedPost
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+});
 
 module.exports = app;
